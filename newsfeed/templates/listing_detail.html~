@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Detail - Marketplace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Styles for the header and footer */
+        header {
+            background-image: url("{% static 'main/8422166.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        footer {
+            background-image: url("{% static 'main/8422166.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        /* Styles for the listing detail section */
+        .listing-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .listing-info h2 {
+            margin-bottom: 20px;
+        }
+
+        .listing-info p {
+            margin-bottom: 10px;
+        }
+
+        /* Styles for the listing card */
+        .listing-card {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .listing-card h3 {
+            margin-top: 0;
+            text-align: left;
+        }
+
+        .listing-card p {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        /* Styles for the carousel */
+        .carousel-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+    width: 100%; /* Add this line */
+}
+
+
+      .carousel-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px; /* Fixed width */
+    max-height: 300px; /* Maximum height */
+    overflow: hidden;
+    height: 500px;
+}
+
+        .carousel-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden; /* Prevent scrolling */
+    width: 100%; /* Full width */
+    justify-content: center; /* Center the carousel items */
+    align-items: center; /* Center items vertically */
+}
+        .carousel-controls {
+    display: flex;
+    justify-content: center; /* Center the carousel controls */
+    margin-top: 10px;
+    width: 100%;
+}
+
+    .carousel-item img {
+    object-fit: cover; /* Maintain aspect ratio */
+    max-width: 100%; /* Prevent image from overflowing */
+    max-height: 200px; /* Set a fixed height */
+    border-radius: 10px; /* Apply border radius */
+}
+        .carousel-item {
+    display: flex; /* Center the image */
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+    width: 100%; /* Full width for carousel item */
+}
+
+       .carousel-controls {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+}
+
+.carousel-prev, .carousel-next {
+    background-color: gray;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.carousel-prev {
+    margin-right: auto;
+}
+
+.carousel-next {
+    margin-left: auto;
+}
+
+        /* Styles for the buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .button:hover {
+            background-color: #3e8e41;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .edit-button {
+            background-color: #4CAF50;
+        }
+
+        .edit-button:hover {
+            background-color: #3e8e41;
+        }
+
+        .button i {
+            margin-right: 5px;
+        }
+
+        .report-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .report-button:hover {
+            background-color: #c82333;
+        }
+
+        .button-group {
+            margin-bottom: 20px;
+        }
+
+        .username-link {
+            text-decoration: underline !important;
+            color: red !important;
+        }
+.listing-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">Ecalp Techmar</h1>
+                        <nav>
+                <ul>
+                    {% if not request.user.is_staff %}
+                        <li><a href="{% url 'newsfeed:newsfeed' %}"><i class="fas fa-home"></i> News Feed</a></li>
+                    {% endif %}
+                    {% if request.user.is_staff %}
+                        <li>
+                            <a href="{% url 'custom_admin:admin_dashboard' %}"><i class="fas fa-home"></i> Home </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="listing-detail">
+        {% load tz %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="container">
+            <h2>Listing Detail</h2>
+            <div class="listing-info">
+                <div class="listing-card">
+                    <div class="carousel-container">
+                        <div class="carousel-inner">
+                            {% for image in product.productimage_set.all %}
+                                <div class="carousel-item">
+                                    <a href="{{ image.image.url }}" target="_blank">
+                                        <img src='{{ image.image.url }}' alt="Product Image">
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-controls">
+                        {% if product.productimage_set.all|length > 1 %}
+                            <button class="carousel-prev">Prev</button>
+                            <button class="carousel-next">Next</button>
+                        {% endif %}
+                    </div>
+                    </div>
+                    <h2>{{ product.title }}</h2>
+                   <div class="listing-details">
+                <p><strong>Category:</strong> {{ product.category }}</p>
+                <p><strong>Description:</strong> {{ product.description }}</p>
+                <p><strong>Price:</strong> {{ product.price }}</p>
+                <p><strong>Mobile Number:</strong> +63 {{ product.mobile_number }}</p>
+                <p><strong>Location:</strong> {{ product.location }}</p>
+                <p><strong>Posted by:</strong> <a href="{% url 'newsfeed:profile' product.user.pk %}" class="username-link">{{ product.user.username }}</a></p>
+                <p><strong>Posted on:</strong> {{ product.created_at|timezone:"Asia/Manila" }}</p>
+            </div>
+
+                    <div class="button-group">
+                        {% if product.user != request.user and not request.user.is_superuser %}
+                            <a href="{% url 'newsfeed:report_listing' product.pk %}" class="button report-button" style="text-decoration: none;">
+                                <i class="fas fa-exclamation"></i> Report Listing
+                            </a>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'custom_admin:delete_product' product.pk %}" class="button delete-button" style="text-decoration: none;" onclick="return confirm('Are you sure you want to delete this product?')">
+                                <i class="fas fa-trash-alt"></i> Delete Listing
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p style="text-align: center; width: 100%;">&copy; 2024 Ecalp Techmar. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Get the carousel container and its elements
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carouselInner = document.querySelector('.carousel-inner');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const carouselPrev = document.querySelector('.carousel-prev');
+        const carouselNext = document.querySelector('.carousel-next');
+
+        // Set the initial active item
+        let activeItem = 0;
+
+        // Function to navigate to the next item
+        function navigateNext() {
+            activeItem = (activeItem + 1) % carouselItems.length;
+            updateCarousel();
+        }
+
+        // Function to navigate to the previous item
+        function navigatePrev() {
+            activeItem = (activeItem - 1 + carouselItems.length) % carouselItems.length;
+            updateCarousel();
+        }
+
+        // Function to update the carousel
+        function updateCarousel() {
+            carouselItems.forEach((item, index) => {
+                item.style.display = index === activeItem ? 'block' : 'none';
+            });
+        }
+
+        // Add event listeners to the navigation buttons
+        carouselPrev.addEventListener('click', navigatePrev);
+        carouselNext.addEventListener('click', navigateNext);
+
+        // Initialize the carousel
+        updateCarousel();
+    </script>
+</body>
+</html>
